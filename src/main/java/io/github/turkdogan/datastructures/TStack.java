@@ -1,5 +1,10 @@
 package io.github.turkdogan.datastructures;
 
+/**
+   A simple stack implementation with Java Optional
+
+   Turkdogan Tasdelen ttasdelen@gmail.com
+*/
 import java.util.Optional;
 
 import java.io.Serializable;
@@ -16,11 +21,7 @@ public class TStack<T> implements TCollection {
 
     public void push(T element) {
         TStackNode<T> newNode = new TStackNode<T>(element);
-        if (this.node.isPresent()) {
-            newNode.setNext(this.node);
-        } else {
-            newNode.setNext(Optional.empty());
-        }
+        newNode.setNext(this.node);
         this.node = Optional.of(newNode);
 
         size++;
@@ -45,10 +46,12 @@ public class TStack<T> implements TCollection {
         return Optional.empty();
     }
 
+    @Override
     public int size() {
         return this.size;
     }
 
+    @Override
     public boolean isEmpty() {
         return this.size == 0;
     }
@@ -61,6 +64,7 @@ public class TStack<T> implements TCollection {
 
         public TStackNode(T element) {
             setElement(element);
+            setNext(Optional.empty());
         }
 
         public T getElement() {
@@ -80,4 +84,3 @@ public class TStack<T> implements TCollection {
         }
     }
 }
-
