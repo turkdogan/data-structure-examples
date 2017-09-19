@@ -110,7 +110,7 @@ public class TBinaryTree<T extends Comparable<T>> implements TCollection {
             int compare = value.compareTo(node.get().value);
             if (compare == 0) {
                 size--;
-                if (size == 0) { // delete root
+                if (size == 0) { // delete single root
                     root = Optional.empty();
                     return true;
                 }
@@ -137,14 +137,13 @@ public class TBinaryTree<T extends Comparable<T>> implements TCollection {
         // 1. find minimum node from right subtree,
         // 2. replace it with the deleted node
         // 3. delete the minimum subtree node
+        TTreeNode<T> minimumParent = node;
+        TTreeNode<T> minimum = node.right.get();
         if (navigateRight) {
-            TTreeNode<T> minimum = node.right.get();
-            TTreeNode<T> minimumParent = node;
             while (minimum.left.isPresent()) {
                 minimumParent = minimum;
                 minimum = minimum.left.get();
             }
-            node.value = minimum.value;
             if (minimumParent.left.isPresent())  {
                 if (minimum.right.isPresent()) {
                     minimumParent.left = minimum.right;
@@ -155,15 +154,13 @@ public class TBinaryTree<T extends Comparable<T>> implements TCollection {
                 minimumParent.left = minimum.right;
             }
         } else {
-            TTreeNode<T> minimum = node.left.get();
-            TTreeNode<T> minimumParent = node;
+            minimum = node.left.get();
             while (minimum.right.isPresent()) {
                 minimumParent = minimum;
                 minimum = minimum.right.get();
             }
-            node.value = minimum.value;
             if (minimumParent.right.isPresent())  {
-                if (minimum.right.isPresent()) {
+                if (minimum.left.isPresent()) {
                     minimumParent.right = minimum.right;
                 } else {
                     minimumParent.right = Optional.empty();
@@ -172,6 +169,7 @@ public class TBinaryTree<T extends Comparable<T>> implements TCollection {
                 minimumParent.right = minimum.right;
             }
         }
+        node.value = minimum.value;
     }
 
     private void deleteNode(TTreeNode<T> node, TTreeNode<T> parent) {
